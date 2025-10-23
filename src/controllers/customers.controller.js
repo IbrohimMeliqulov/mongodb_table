@@ -4,6 +4,8 @@ export const customerController = {
   create: async function (req, res, next) {
     try {
       const customer = await customerModel.create(req.body);
+      const user_email=await customerModel.find({email:customer.email})
+      if(user_email) return res.status(403).send({message:`${customer.email} duplicate emails not allowed`})
       return res.status(201).send({
         message: "Customer created",
         data: customer,
