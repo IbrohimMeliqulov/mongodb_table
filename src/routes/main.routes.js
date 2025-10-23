@@ -8,7 +8,7 @@ import delivery_staffRouter from "./delivery_staff.routes.js";
 
 const MainRouter = Router();
 
-MainRouter.use("/customer", customerRouter);
+MainRouter.use("/customers", customerRouter);
 MainRouter.use("/water_products", water_productsRouter);
 MainRouter.use("/address", addressRouter);
 MainRouter.use("/districts",districtsRouter)

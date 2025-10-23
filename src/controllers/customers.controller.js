@@ -1,11 +1,16 @@
+import { jwtTokens } from "../helpers/jwt.js";
 import customerModel from "../models/customers.models.js";
+import bcrypt from "bcrypt"
 
 export const customerController = {
   create: async function (req, res, next) {
     try {
+      const user_email=await customerModel.findOne({email:req.body.email})
+      if(user_email) return res.status(403).send({message:`${req.body.email} duplicate emails not allowed`})
+      const password=req.body.password
+      const hashedPassword=await bcrypt.hash(password,10)
+      req.body.password=hashedPassword 
       const customer = await customerModel.create(req.body);
-      const user_email=await customerModel.find({email:customer.email})
-      if(user_email) return res.status(403).send({message:`${customer.email} duplicate emails not allowed`})
       return res.status(201).send({
         message: "Customer created",
         data: customer,
@@ -59,4 +64,20 @@ export const customerController = {
       return next(err);
     }
   },
+  login:async function(req,res,next){
+    try{
+      const {email,password}=req.body
+      const user=await customerModel.findOne({email:email})
+      if(user.length===0) return res.status(404).send({message:`${user.email} user not found`})
+      const passwordMatch=await bcrypt.compare(password,user.password)
+      const tokens=jwtTokens(user)
+      if(!passwordMatch) return res.status(400).send({message:`Password didn't match`})
+      return res.status(200).send({
+        message:"Successfully logged in",
+        data:tokens
+      }) 
+    }catch(err){
+      return next(err)
+    }
+  }
 };
