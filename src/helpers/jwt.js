@@ -6,7 +6,7 @@ export const jwtTokens=(user)=>{
     const accessToken=jwt.sign({
         email:user.email,
         password:user.password
-    },process.env.ACCESS_TOKEN_SECRET,{expiresIn:'15m'})
+    },process.env.ACCESS_TaOKEN_SECRET,{expiresIn:'15m'})
 
     const refreshToken=jwt.sign({
         email:user.email,

@@ -7,5 +7,6 @@ customerRouter.get("/", customerController.getAllCustomers);
 customerRouter.post("/", customerController.create);
 customerRouter.put("/:id", customerController.update);
 customerRouter.delete("/:id", customerController.delete);
+customerRouter.post("/login",customerController.login)
 
 export default customerRouter;
